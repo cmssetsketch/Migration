@@ -110,7 +110,7 @@ html,body {
   min-width: 0;
   padding: 0 10px;
   font-size: clamp(11px, 1.6vw, 14px);
-  white-space: normal;
+  white-space: nowrap;
 border: 1px solid #fff; 
   cursor: pointer;
   opacity: 0.5;
