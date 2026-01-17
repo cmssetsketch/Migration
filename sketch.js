@@ -1,5 +1,4 @@
 let svg; let webIcon; let instaIcon; 
-let iconB; let iconC; let iconR; let iconI; 
 let mailIcon;
 let buttons = [];
 let pays = [];
@@ -60,7 +59,7 @@ if (!response.ok) {
 
 // ---------------- PRELOAD ----------------
     p.preload = function () {
-      langdata = p.loadJSON("/lang.json");
+      langdata = p.loadJSON("lang.json");
       citizenData =p.loadJSON("Citizenship.json");
       svg = p.loadXML("./MigMappFinalN.svg"); 
       worldPopData = p.loadJSON("CountrySize.json");  
