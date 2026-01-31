@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <title>Statland</title>
+  <title>Migration</title>
   
   <link rel="stylesheet" href="style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
@@ -21,8 +21,9 @@
   </div>
 
 <div id="toolbar">
+  
     <div class="toolbar-left">
-      <button id="info-btn">?</button>
+      <button id="info-btn">Info</button>
       <div class="lang-switch">
 <button onclick="setLang('fr')" class="fr-btn active" data-lang="fr">fr</button>
 <button onclick="setLang('en')" class="en-btn" data-lang="en">en</button>
@@ -30,7 +31,7 @@
 
     </div>
 
-<div class="toolbar-center">
+<div id="toolbar-center">
   <button class="zoom-btn" data-zoom="in" id="zoom-in">+</button>
   <button class="zoom-btn" data-zoom="out" id="zoom-out">−</button>
 </div>
@@ -38,6 +39,8 @@
   <button id="toggle-everybody" class="toggle-btn active">Population mondiale</button>
   <button id="toggle-migrant" class="toggle-btn">Migrants seulement</button>
 </div>
+
+         </div>
   </div>
 
   <!-- Scripts -->
