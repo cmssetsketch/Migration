@@ -115,23 +115,41 @@ if (!isEverybodyMode && b.originalName === "Kosovo") {
 } else {
   const popValue = isEverybodyMode ? b.population2024 : b.migTotalRaw;
   const popLabel = isEverybodyMode ? "Population :" : "Migrants :";
+const realValue = popValue * 1000;
 
-  if (popValue * 1000 >= 1_000_000) {
-    const millions = popValue / 1000;
+if (realValue >= 1_000_000_000) {
+  // Billions
+  const billions = realValue / 1_000_000_000;
 
-    const formattedMillions =
-      Number.isInteger(millions)
-        ? millions.toString()
-        : millions.toFixed(1).replace(/\.0$/, "");
+  const formattedBillions =
+    Number.isInteger(billions)
+      ? billions.toString()
+      : billions.toFixed(1).replace(/\.0$/, "");
 
-    millionsText =
-      formattedMillions.replace(".", ",") +
-      " million" +
-      (millions > 1 ? "s" : "");
-  } else {
-    millionsText = Math.round(popValue * 1000).toLocaleString("fr-FR");
-  }
-}
+  millionsText =
+    formattedBillions.replace(".", ",") +
+    " " +
+    t("legend.billion"); // e.g. "milliard", "billion", etc.
+
+} else if (realValue >= 1_000_000) {
+  // Millions
+  const millions = realValue / 1_000_000;
+
+  const formattedMillions =
+    Number.isInteger(millions)
+      ? millions.toString()
+      : millions.toFixed(1).replace(/\.0$/, "");
+
+  millionsText =
+    formattedMillions.replace(".", ",") +
+    " " +
+    t("legend.million") +
+    (millions > 1 ? "s" : "");
+
+} else {
+  // Less than 1 million
+  millionsText = realValue.toLocaleString("fr-FR");
+}}
 const nameDiv = document.createElement("div");
 nameDiv.className = "popup-title long-name";
 nameDiv.style.color = color;
@@ -207,7 +225,7 @@ function createCitizenNotes(countryName, namePop) {
 // Build and inject header
 header.appendChild(topRow);
   header.appendChild(popDiv);
-  if (isEverybodyMode&& b.originalName !== "Kosovo"){
+  if (isEverybodyMode&& b.originalName !== "Kosovo" &&  b.originalName !== "Melanesia"){
   migInfo.appendChild(citizenDiv);
     header.appendChild(migInfo);
   }
@@ -582,6 +600,20 @@ document.querySelectorAll(".zoom-btn").forEach(btn => {
     lastPinchDist = null;
     tapStart = null;
   });
+  
+    document.addEventListener("pointerdown", (e) => {
+  const popUp = document.getElementById("popUp");
+
+  // if click/tap is outside the map AND outside the popup
+  if (
+    !mapContainer.contains(e.target) &&
+    !popUp.contains(e.target)
+  ) {
+    selectedButton = null;
+    popUp.style.display = "none";
+  }
+});
+  
 }
 
 // ---------------- ZOOM FUNCTIONS ----------------
@@ -626,26 +658,16 @@ function requestSafeRedraw(p) {
 
 // -------------------- POPINFO CONTENT --------------------
 function showPopInfo() {
-  // Clear and create main HTML with minimal heavy DOM
+
   popInfo.innerHTML = `
-    <span id="welcome">${t("popInfo.statland")}</span><br>
-    <span id="disclaimer">${t("popInfo.disclaimer")}</span>
-<div id="popGeography" class="geography-map"></div>
-    <span id="geography">${t("popInfo.geography")}</span><br>
-    
-    <span id="originCountry"></span><br>
-<span id="region">${t("popInfo.particles")}</span><br>
-    <div id="particlesAnim"></div>
-     <span id="motif">${t("popInfo.motif")}</span><br>
-    <div id="patternLines"></div>
-    <span id="decision">${t("popInfo.decision")}</span><br>
-    <div id="popDecision" class="decision-img"></div>
-   <span id="criteres">${t("popInfo.criteres")}</span><br>
-    <div id="popCritere" class="criteres-img"></div>
-    <span id="migrant">${t("popInfo.migrant")}</span><br>
-    <div id="popMigrant" class="migrant-img"></div>
-    
+
+
+<p id="disclaimer">${t("popInfo.warning")}</p>
+    <span id="warning">${t("popInfo.disclaimer")}</span><br>
+
     <div id="popContact" class="popContact"></div>
+
+
     <div class="info-icons">
       <a href="mailto:cmsset@gmail.com"><img src="mail.svg"></a>
       <a href="https://chloe-msset.com/art" target="_blank"><img src="web-Icon.svg"></a>
@@ -665,193 +687,11 @@ function showPopInfo() {
     container.style.paddingBottom = `${padding}px`;
   }
 
-  addImg("popGeography", "geographymapsquare.png", "geography-map");
-  addImg("popDecision", "decision.png", "decision-img");
-  addImg("popMigrant", "migrant.png", "migrant-img");
-  addImg("popCritere", "criteres.png", "criteres-img");
+
   addImg("popContact", "me-Icon-White.png", "contact-image", 0);
 
-  // ------------------- Origin country -------------------
-  const originContainer = document.getElementById("originCountry");
-  if (originContainer && buttons.length > 0) {
-    function updateRandomCountry() {
-      const b = buttons[Math.floor(Math.random() * buttons.length)];
-      const shapeId = countryToShape[b.originalName];
-      const color = getColorForCountry(b.originalName);
 
-      originContainer.innerHTML = "";
-      const wrapper = document.createElement("div");
-      wrapper.style.display = "flex";
-      wrapper.style.flexDirection = "column";
-      wrapper.style.alignItems = "center";
-
-      const shape = createCountryShapeSVG(shapeId, color, 28);
-      shape.style.pointerEvents = "none";
-      shape.style.fill = color;
-
-      const label = document.createElement("span");
-      label.textContent =
-  langdata[currentLang]?.countries?.[b.originalName] ?? b.originalName;
-      label.style.fontSize = "12px";
-      label.style.color = color;
-      label.style.paddingTop = "5px";
-
-      wrapper.append(shape, label);
-      originContainer.appendChild(wrapper);
-    }
-
-    updateRandomCountry();
-    setInterval(updateRandomCountry, 2000);
-  }
-
-  // ------------------- Pattern lines -------------------
-  const patternContainer = document.getElementById("patternLines");
-  patternContainer.style.display = "flex";
-  patternContainer.style.flexDirection = "column";
-  patternContainer.style.alignItems = "center";
- 
-function createMiniShapeBlock(shapeId, color, size = 10) {
-    const block = document.createElement("div");
-    block.style.width = `${size}px`;
-    block.style.height = `${size}px`;
-    block.style.display = "flex";
-    block.style.alignItems = "center";
-    block.style.justifyContent = "center"; // centers the svg inside
-    const shape = createCountryShapeSVG(shapeId, color, size);
-    shape.style.display = "block"; // removes inline baseline issue
-    block.appendChild(shape);
-    return block;
 }
-  const mainButton = buttons[Math.floor(Math.random() * buttons.length)];
-  const mainShapeId = countryToShape[mainButton.originalName];
-  const mainColor = getColorForCountry(mainButton.originalName);
-
-const frameDiv = document.createElement("div");
-frameDiv.style.display = "inline-block";       // or flex if you prefer
-frameDiv.style.verticalAlign = "middle";          // fixes baseline issue
-frameDiv.style.border = `1px solid ${mainColor}`;
-frameDiv.style.boxSizing = "border-box";       // include padding in frame size
-frameDiv.style.height = "fit-content";
-
-const fragment = document.createDocumentFragment();
-for (let lineIndex = 0; lineIndex < 4; lineIndex++) {
-  const lineDiv = document.createElement("div");
-  lineDiv.style.display = "flex";
-  for (let i = 0; i < 20; i++) {
-    let shapeId = mainShapeId;
-    let color = mainColor;
-    if (Math.random() < 0.2) {
-      const rnd = buttons[Math.floor(Math.random() * buttons.length)];
-      shapeId = countryToShape[rnd.originalName];
-      color = getColorForCountry(rnd.originalName);
-    }
-    lineDiv.appendChild(createMiniShapeBlock(shapeId, color));
-  }
-  fragment.appendChild(lineDiv);
-}
-
-frameDiv.appendChild(fragment);
-patternContainer.appendChild(frameDiv);
-
-const particlesAnim = document.getElementById("particlesAnim");
-
-const particleBlock = document.createElement("div");
-  particleBlock.id = "particleBlock"; 
-const containerWidth = 250;
-const containerHeight = containerWidth * 0.2;
-
-particleBlock.style.position = "relative";
-particleBlock.style.width = `${containerWidth}px`;
-particleBlock.style.height = `${containerHeight}px`;
-particleBlock.style.overflow = "hidden";
-
-particlesAnim.appendChild(particleBlock);
-
-  const particleCount = 10;
-  const particles = [];
-  const size = 8;
-
-  // Create particles once
-  for (let i = 0; i < particleCount; i++) {
-    const b = buttons[Math.floor(Math.random() * buttons.length)];
-    const shapeId = countryToShape[b.originalName];
-    const color = getColorForCountry(b.originalName);
-
-const shape = createCountryShapeSVG(shapeId, color, size);
-shape.style.position = "absolute";
-shape.style.pointerEvents = "none";
-shape.style.display = "block";
-shape.style.transformOrigin = "0 0";
-    const x =
-  ((i + Math.random()) / particleCount) * (containerWidth - size);
-    const y = Math.random() * (containerHeight - size);
-    shape.style.left = `${x}px`;
-shape.style.top = `${y}px`;
-    particleBlock.appendChild(shape);
-
-    particles.push({
-      el: shape,
-      x,
-      y,
-     vx: (Math.random() * 2 - 1) * 0.2,
-vy: (Math.random() * 2 - 1) * 0.2,
-    });
-  }
-
-  // Animate particles using transform only
-  function updateParticles() {
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0) {
-  p.x = 0;
-  p.vx *= -1;
-} else if (p.x > containerWidth - size) {
-  p.x = containerWidth - size;
-  p.vx *= -1;
-}
-
-if (p.y < 0) {
-  p.y = 0;
-  p.vy *= -1;
-} else if (p.y > containerHeight - size) {
-  p.y = containerHeight - size;
-  p.vy *= -1;
-}
-
-      // Occasionally change color/shape, but reuse element
-      if (Math.random() < 0.001) {
-        const b = buttons[Math.floor(Math.random() * buttons.length)];
-        const newShapeId = countryToShape[b.originalName];
-        const newColor = getColorForCountry(b.originalName);
-
-        const newShape = createCountryShapeSVG(newShapeId, newColor, size);
-        newShape.style.position = "absolute";
-        newShape.style.transform = `translate(${p.x}px, ${p.y}px)`;
-        newShape.style.pointerEvents = "none";
-
-        particleBlock.replaceChild(newShape, p.el);
-        p.el = newShape;
-      }
-
-      p.el.style.left = `${p.x}px`;
-p.el.style.top = `${p.y}px`;
-    });
-
-    requestAnimationFrame(updateParticles);
-  }
-
-  updateParticles();
-}
-
-/*function defaultShapeSVG() {
-  return `
-    <svg viewBox="0 0 10 10">
-      <rect x="0" y="0" width="2" height="2" fill="#888"/>
-    </svg>
-  `;
-}*/
-
 
 
 document.addEventListener("click", (e) => {
@@ -867,6 +707,7 @@ document.addEventListener("click", (e) => {
     
   }
 });
+
 
 function openPopUpForCountry(b) {
   selectedButton = b;       // save the selected country
@@ -896,5 +737,3 @@ function buildLegendFromLetters(letters, joinType = "or") {
     labels[labels.length - 1]
   );
 }
-
-
