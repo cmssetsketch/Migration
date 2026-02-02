@@ -921,7 +921,7 @@ b.migTotalRaw = b.population2024 * (b.migShare2024 / 100);
       const ratio = b.squareCount / sumMig;
 const rawMigSquare = (b.migShare2024 * b.squareCount) / 100;
 const migSquare = rawMigSquare > 0 ? Math.max(1, Math.round(rawMigSquare)) : 0;
-
+b.sumMig = sumMig/1000;
       for (let dest in b.dataMig2024) {
         b.dataMigSquares2024[dest] = b.dataMig2024[dest] * ratio;
       }
