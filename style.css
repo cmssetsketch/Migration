@@ -567,13 +567,13 @@ body {
 .intro-logo {
   width: clamp(60px, 15vw, 80px);
   height: auto;
-  margin-bottom: 15px;
-  margin-top: 15px;
+  margin-bottom: 10px;
+  margin-top: 25px;
   flex-shrink: 0;
 }
 
 .intro-socials {
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   gap: 20px;
