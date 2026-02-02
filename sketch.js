@@ -125,7 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const bottomMargin = parseFloat(style.getPropertyValue("--bottom-margin")) || 20;
       const toolbarHeight = toolbar.getBoundingClientRect().height || 40;
       const isPortrait = window.innerHeight > window.innerWidth;
-      const heightFactor = isPortrait ? 0.98 : 0.9;
+      // On desktop (not portrait), take 100% of available space (factor 1.0)
+      const heightFactor = isPortrait ? 0.98 : 1.0;
       let availableHeight = (vh - topMargin - bottomMargin - toolbarHeight) * heightFactor;
       // availableHeight = Math.min(availableHeight, 1000);
 
