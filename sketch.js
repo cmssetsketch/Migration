@@ -1,8 +1,8 @@
-let svg; let webIcon; let instaIcon; 
+let svg; let webIcon; let instaIcon;
 let mailIcon;
 let buttons = [];
 let pays = [];
-let years = ["1990","1995","2000","2005","2010","2015","2020","2024"];
+let years = ["1990", "1995", "2000", "2005", "2010", "2015", "2020", "2024"];
 let worldPopData;
 let citizenData;
 let countryData = {};
@@ -15,7 +15,7 @@ let MIN_ZOOM = 1;
 let offscreen;
 window.currentLang = "fr";
 window.langData = null;
-let buttonsReady = false; 
+let buttonsReady = false;
 let isEverybodyMode = true;
 let container;
 document.addEventListener("DOMContentLoaded", () => {
@@ -29,10 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const response = await fetch(url);
         if (!response.ok) return null;
-if (!response.ok) {
-  console.error("Failed to load SVG:", url);
-  return null;
-}
+        if (!response.ok) {
+          console.error("Failed to load SVG:", url);
+          return null;
+        }
         const svgText = await response.text();
         const wrapper = document.getElementById("svg-wrapper");
         wrapper.innerHTML = svgText;
@@ -57,178 +57,181 @@ if (!response.ok) {
     }
 
 
-// ---------------- PRELOAD ----------------
+    // ---------------- PRELOAD ----------------
     p.preload = function () {
       langdata = p.loadJSON("lang.json");
-      citizenData =p.loadJSON("Citizenship.json");
-      svg = p.loadXML("./MigMappFinalN.svg"); 
-      worldPopData = p.loadJSON("CountrySize.json");  
+      citizenData = p.loadJSON("Citizenship.json");
+      svg = p.loadXML("./MigMappFinalN.svg");
+      worldPopData = p.loadJSON("CountrySize.json");
       png = p.loadImage("me-Icon-White.png");
-countryMig = p.loadJSON("MigWorld.json");
+      countryMig = p.loadJSON("MigWorld.min.json");
       webIcon = p.loadXML("./web-Icon.svg");
       instaIcon = p.loadXML("./instagram-icon.svg");
       mailIcon = p.loadXML("./mail.svg");
-      
-      
+
+
       for (let i = 1; i <= 25; i++) {
         const name = p.nf(i, 2);
         shapeSVGs[name] = p.loadXML(`Shapes/${name}.svg`);
-      }      
+      }
     };
 
-window.t = function t(path) {
-  if (!langdata) {
-    console.warn("t() called before langData loaded:", path);
-    return path;
-  }
-  const keys = path.split(".");
-  let value = langdata[currentLang];
-  keys.forEach(k => {
-    value = value?.[k];
-  });
-  return value || path;
-}
+    window.t = function t(path) {
+      if (!langdata) {
+        console.warn("t() called before langData loaded:", path);
+        return path;
+      }
+      const keys = path.split(".");
+      let value = langdata[currentLang];
+      keys.forEach(k => {
+        value = value?.[k];
+      });
+      return value || path;
+    }
 
-// setLang function
-window.setLang = function(lang) {
-  window.currentLang = lang;
+    // setLang function
+    window.setLang = function (lang) {
+      window.currentLang = lang;
 
-  // Update button active state
-  document.querySelectorAll(".fr-btn, .en-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.lang === lang);
-  });
-document.getElementById("toggle-everybody").textContent = t("legend.everybody");
-document.getElementById("toggle-migrant").textContent = t("legend.migbutton");
-  // If a popup is open, refresh its content using the stored country
-  if (popInfo.classList.contains("active")) {
-    showPopInfo();
-    
-  }else if (selectedButton) {
-  showData(selectedButton);
-  }// pass the same b object
-};
+      // Update button active state
+      document.querySelectorAll(".fr-btn, .en-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.lang === lang);
+      });
+      document.getElementById("toggle-everybody").textContent = t("legend.everybody");
+      document.getElementById("toggle-migrant").textContent = t("legend.migbutton");
+      // If a popup is open, refresh its content using the stored country
+      if (popInfo.classList.contains("active")) {
+        showPopInfo();
 
- const container = document.getElementById("map-container");
-const toolbar = document.getElementById("toolbar");
-
-function resizeMapContainer() {
-  const mapContainer = document.getElementById("map-container");
-  const toolbar = document.getElementById("toolbar");
-  if (!mapContainer || !toolbar) return;
-
-  // visible viewport height
-  const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-
-  // get CSS margins
-  const style = getComputedStyle(document.documentElement);
-  const topMargin = parseFloat(style.getPropertyValue("--top-margin")) || 20;
-  const bottomMargin = parseFloat(style.getPropertyValue("--bottom-margin")) || 20;
-  const toolbarHeight = toolbar.getBoundingClientRect().height || 40;
-  let availableHeight = vh - topMargin - bottomMargin - toolbarHeight;
-  availableHeight = Math.min(availableHeight, 1000);
-
-  // set container height
-  mapContainer.style.height = `${availableHeight}px`;
-  mapContainer.style.marginTop = `${topMargin}px`;
-
-  // resize p5 canvas
-  if (p && p.resizeCanvas && p.canvas) {
-    p.resizeCanvas(mapContainer.clientWidth, availableHeight);
-    p.redraw();
-  }
-
-  // center SVG content
-  const svgWrapper = document.getElementById("svg-wrapper");
-  if (svgWrapper) {
-    const svgEl = svgWrapper.querySelector("svg");
-    if (!svgEl) return;
-
-    const svgWidth = svgEl.viewBox.baseVal.width;
-    const svgHeight = svgEl.viewBox.baseVal.height;
-
-    // Original centering — just compute panX/panY
-    panX = (mapContainer.clientWidth - svgWidth * zoom) / 2;
-    panY = (mapContainer.clientHeight - svgHeight * zoom) / 2;
-
-    if (p && p.redraw) p.redraw();
-  }
-}
-
-    
-// Run once after DOM load
-window.addEventListener("load", resizeMapContainer);
-
-// Update on resize or visual viewport change
-window.addEventListener("resize", resizeMapContainer);
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", resizeMapContainer);
-}
-   
-
-// iPad detection ?
-function isIPad() {
-  return /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
-}
-
-
-// ---------------- SETUP ----------------
- p.setup = async function () {
-//const container = document.getElementById("map-container");
-
-const c = p.createCanvas(container.clientWidth, container.clientHeight);
-  c.parent("p5-wrapper");
-
-  // Retina support
-  p.pixelDensity(Math.min(2, window.devicePixelRatio || 1));
-
- // Inject SVG FIRST
-    await injectSvgFromUrl("./MigMappFinalN.svg");
-   resizeMapContainer();
-
-    createButtonsFromDOM();
-    initAllCountryData();
-    initData(p);
-
-// Squares
-    buttons.forEach(b => generateSquaresForButton(b));
-    buttonsReady = true; 
-
-    p.noLoop(); // redraw only when needed
-    p.redraw();
-   container.style.visibility = "visible";
-    await setupInteractions(p);
-   togglePopInfo(true); 
-
+      } else if (selectedButton) {
+        showData(selectedButton);
+      }// pass the same b object
     };
-    
+
+    const container = document.getElementById("map-container");
+    const toolbar = document.getElementById("toolbar");
+
+    function resizeMapContainer() {
+      const mapContainer = document.getElementById("map-container");
+      const toolbar = document.getElementById("toolbar");
+      if (!mapContainer || !toolbar) return;
+
+      // visible viewport height
+      const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
+      // get CSS margins
+      const style = getComputedStyle(document.documentElement);
+      const topMargin = parseFloat(style.getPropertyValue("--top-margin")) || 20;
+      const bottomMargin = parseFloat(style.getPropertyValue("--bottom-margin")) || 20;
+      const toolbarHeight = toolbar.getBoundingClientRect().height || 40;
+      let availableHeight = vh - topMargin - bottomMargin - toolbarHeight;
+      // availableHeight = Math.min(availableHeight, 1000);
+
+      // set container height
+      mapContainer.style.height = `${availableHeight}px`;
+      mapContainer.style.marginTop = `${topMargin}px`;
+
+      // resize p5 canvas
+      if (p && p.resizeCanvas && p.canvas) {
+        p.resizeCanvas(mapContainer.clientWidth, availableHeight);
+        p.redraw();
+      }
+
+      // center SVG content
+      const svgWrapper = document.getElementById("svg-wrapper");
+      if (svgWrapper) {
+        const svgEl = svgWrapper.querySelector("svg");
+        if (!svgEl) return;
+
+        const svgWidth = svgEl.viewBox.baseVal.width;
+        const svgHeight = svgEl.viewBox.baseVal.height;
+
+        // Original centering — just compute panX/panY
+        panX = (mapContainer.clientWidth - svgWidth * zoom) / 2;
+        panY = (mapContainer.clientHeight - svgHeight * zoom) / 2;
+
+        if (p && p.redraw) p.redraw();
+      }
+    }
+
+
+    // Run once after DOM load
+    window.addEventListener("load", resizeMapContainer);
+
+    // Update on resize or visual viewport change
+    window.addEventListener("resize", resizeMapContainer);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", resizeMapContainer);
+    }
+
+
+    // iPad detection ?
+    function isIPad() {
+      return /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+    }
+
+
+    // ---------------- SETUP ----------------
+    p.setup = async function () {
+      //const container = document.getElementById("map-container");
+
+      const c = p.createCanvas(container.clientWidth, container.clientHeight);
+      c.parent("p5-wrapper");
+
+      // Retina support
+      p.pixelDensity(Math.min(2, window.devicePixelRatio || 1));
+
+      // Inject SVG FIRST
+      await injectSvgFromUrl("./MigMappFinalN.svg");
+      resizeMapContainer();
+
+      createButtonsFromDOM();
+      initAllCountryData();
+      initData(p);
+
+      // Squares
+      buttons.forEach(b => generateSquaresForButton(b));
+      buttonsReady = true;
+
+      p.noLoop(); // redraw only when needed
+      p.redraw();
+      container.style.visibility = "visible";
+      await setupInteractions(p);
+      togglePopInfo(true);
+
+      p.windowResized = () => {
+        if (window.resizeMapContainer) window.resizeMapContainer();
+      };
+    };
+
 
     // ---------------- DRAW ----------------
-p.draw = function () {
-  if (!buttonsReady) return;
-if (Math.abs(zoomVelocity) > 0.00001) {
-  const prevZoom = zoom;
+    p.draw = function () {
+      if (!buttonsReady) return;
+      if (Math.abs(zoomVelocity) > 0.00001) {
+        const prevZoom = zoom;
 
-  zoom *= Math.exp(zoomVelocity);
-  zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
+        zoom *= Math.exp(zoomVelocity);
+        zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
 
-  const wx = (zoomAnchorX - panX) / prevZoom;
-  const wy = (zoomAnchorY - panY) / prevZoom;
+        const wx = (zoomAnchorX - panX) / prevZoom;
+        const wy = (zoomAnchorY - panY) / prevZoom;
 
-  panX = zoomAnchorX - wx * zoom;
-  panY = zoomAnchorY - wy * zoom;
+        panX = zoomAnchorX - wx * zoom;
+        panY = zoomAnchorY - wy * zoom;
 
-  zoomVelocity *= ZOOM_FRICTION;
-  } else {
-  zoomVelocity = 0;
-  } 
+        zoomVelocity *= ZOOM_FRICTION;
+      } else {
+        zoomVelocity = 0;
+      }
 
-  if (selectedButton) {
-    drawSelect(p,selectedButton);
-  } else {
-    drawMap(p);
-    }
-  };
- 
+      if (selectedButton) {
+        drawSelect(p, selectedButton);
+      } else {
+        drawMap(p);
+      }
+    };
+
   });
 
 });
@@ -238,8 +241,8 @@ function getSVGShapes(xml) {
   if (!xml) return [];
   return xml.getChildren("*").filter(n => {
     const t = n.getName();
-    return t === "polygon" || t === "path"|| t === "rect";
-    
+    return t === "polygon" || t === "path" || t === "rect";
+
   });
 }
 
@@ -256,8 +259,8 @@ function drawShapeTo(g, shape, fillMode = false) {
   }
 
   if (shape.type === "polygon") drawPolygon(g, shape.el);
-  if (shape.type === "rect")    drawRect(g, shape.el);
-  if (shape.type === "path")    drawPath(g, shape.el);
+  if (shape.type === "rect") drawRect(g, shape.el);
+  if (shape.type === "path") drawPath(g, shape.el);
 
   g.pop();
 }
@@ -315,76 +318,76 @@ function generateSquaresForButton(b) {
   b.shapeSquares = [];
 
   if (isEverybodyMode) {
-  const totalSquares = Math.min(b.squareCount, positions.length);
-    
-  // 1. How many migrant squares total
-  let totalMigSquares = Math.round((b.migShare2024 * totalSquares) / 100);
-  if (totalMigSquares > 0 && totalMigSquares < 1) totalMigSquares = 1;
-  totalMigSquares = Math.min(totalMigSquares, totalSquares);
+    const totalSquares = Math.min(b.squareCount, positions.length);
 
-  // 2. Compute destination proportions
-  const sumMig = Object.values(b.dataMig2024).reduce((a, v) => a + v, 0);
-  const destCounts = {};
+    // 1. How many migrant squares total
+    let totalMigSquares = Math.round((b.migShare2024 * totalSquares) / 100);
+    if (totalMigSquares > 0 && totalMigSquares < 1) totalMigSquares = 1;
+    totalMigSquares = Math.min(totalMigSquares, totalSquares);
 
-  if (sumMig > 0 && totalMigSquares > 0) {    
-    let assigned = 0;// initial fractional assignment
-    const remainders = [];
+    // 2. Compute destination proportions
+    const sumMig = Object.values(b.dataMig2024).reduce((a, v) => a + v, 0);
+    const destCounts = {};
 
-    for (const dest in b.dataMig2024) {
-      const raw = (b.dataMig2024[dest] / sumMig) * totalMigSquares;
-      const count = Math.floor(raw);
-      destCounts[dest] = count;
-      assigned += count;
-      remainders.push({ dest, rem: raw - count });
+    if (sumMig > 0 && totalMigSquares > 0) {
+      let assigned = 0;// initial fractional assignment
+      const remainders = [];
+
+      for (const dest in b.dataMig2024) {
+        const raw = (b.dataMig2024[dest] / sumMig) * totalMigSquares;
+        const count = Math.floor(raw);
+        destCounts[dest] = count;
+        assigned += count;
+        remainders.push({ dest, rem: raw - count });
+      }
+      // distribute remaining squares by largest remainder
+      let remaining = totalMigSquares - assigned;
+      remainders.sort((a, b) => b.rem - a.rem);
+
+      for (let i = 0; i < remaining; i++) {
+        destCounts[remainders[i % remainders.length].dest]++;
+      }
     }
-   // distribute remaining squares by largest remainder
-    let remaining = totalMigSquares - assigned;
-    remainders.sort((a, b) => b.rem - a.rem);
 
-    for (let i = 0; i < remaining; i++) {
-      destCounts[remainders[i % remainders.length].dest]++;
+    const migrantList = [];// 3. Build migrant destination list
+    for (const dest in destCounts) {
+      for (let i = 0; i < destCounts[dest]; i++) {
+        migrantList.push(dest);
+      }
     }
-  }
+    const destCountriesCount = Object.keys(destCounts).filter(dest => destCounts[dest] > 0).length;
+    b.numDestCountries = destCountriesCount;
+    shuffleArray(positions);
 
-  const migrantList = [];// 3. Build migrant destination list
-  for (const dest in destCounts) {
-    for (let i = 0; i < destCounts[dest]; i++) {
-      migrantList.push(dest);
+    // 4. Assign squares
+    b.shapeSquares = [];
+
+    for (let i = 0; i < totalSquares; i++) {
+      const pos = positions[i];
+
+      if (i < migrantList.length) {
+        const dest = migrantList[i];
+
+        b.shapeSquares.push({
+          x: pos.x,
+          y: pos.y,
+          shapeId: countryToShape[dest],
+          color: getColorForCountry(dest),
+          destName: dest // ← store the country name directly
+        });
+      } else {
+        b.shapeSquares.push({
+          x: pos.x,
+          y: pos.y,
+          shapeId: countryToShape[b.originalName],
+          color: getColorForCountry(b.originalName),
+          destName: b.originalName
+        });
+      }
     }
+
+    return;
   }
-const destCountriesCount = Object.keys(destCounts).filter(dest => destCounts[dest] > 0).length;
-  b.numDestCountries = destCountriesCount;  
-  shuffleArray(positions);
-
-// 4. Assign squares
-  b.shapeSquares = [];
-
-  for (let i = 0; i < totalSquares; i++) {
-    const pos = positions[i];
-
-  if (i < migrantList.length) {
-    const dest = migrantList[i];
-
-    b.shapeSquares.push({
-      x: pos.x,
-      y: pos.y,
-      shapeId: countryToShape[dest],
-      color: getColorForCountry(dest),
-      destName: dest // ← store the country name directly
-    });
-  } else {
-    b.shapeSquares.push({
-      x: pos.x,
-      y: pos.y,
-      shapeId: countryToShape[b.originalName],
-      color: getColorForCountry(b.originalName),
-      destName: b.originalName
-    });
-  }
-}
-
-  return;
-}
   // === MIGRANTS-ONLY / DEFAULT MODE ===
   if (!b.dataMigSquares2024) return;
 
@@ -408,7 +411,7 @@ const destCountriesCount = Object.keys(destCounts).filter(dest => destCounts[des
       color: getColorForCountry(dest)
     });
   }
-  
+
 }
 
 
@@ -439,7 +442,7 @@ function createButtonsFromDOM() {
     const buttonId = rawID.replace(/_/g, " ");
     const shapes = [];
 
-g.querySelectorAll("path, polygon, rect").forEach(el => {
+    g.querySelectorAll("path, polygon, rect").forEach(el => {
       shapes.push({
         type: el.tagName.toLowerCase(),
         el,
@@ -468,7 +471,7 @@ g.querySelectorAll("path, polygon, rect").forEach(el => {
         buttonId,
         shapes: outerShapes,
         color: getColorForCountry(buttonId),
-        
+
       });
     }
   });
@@ -505,7 +508,7 @@ function buildPolygonsFromShape(el) {
     if (!pts) return { outer: [], holes: [] };
     const nums = pts.trim().split(/[ ,]+/).map(Number);
     const outer = [];
-    for (let i = 0; i < nums.length; i += 2) outer.push([nums[i], nums[i+1]]);
+    for (let i = 0; i < nums.length; i += 2) outer.push([nums[i], nums[i + 1]]);
     return { outer, holes: [] };
   }
 
@@ -514,28 +517,28 @@ function buildPolygonsFromShape(el) {
     const y = parseFloat(el.getAttribute("y")) || 0;
     const w = parseFloat(el.getAttribute("width")) || 0;
     const h = parseFloat(el.getAttribute("height")) || 0;
-    return { outer: [[x,y],[x+w,y],[x+w,y+h],[x,y+h]], holes: [] };
+    return { outer: [[x, y], [x + w, y], [x + w, y + h], [x, y + h]], holes: [] };
   }
 
-if (type === "path") {
-  const d = el.getAttribute("d");
-  if (!d) return { outer: [], holes: [] };
+  if (type === "path") {
+    const d = el.getAttribute("d");
+    if (!d) return { outer: [], holes: [] };
 
-  // Convert path to points
-  const path = new Path2D(d);
-  const length = el.getTotalLength?.();
-  const poly = [];
+    // Convert path to points
+    const path = new Path2D(d);
+    const length = el.getTotalLength?.();
+    const poly = [];
 
-  if (el.getTotalLength) {
-    const numPoints = Math.ceil(length / 2); // sample every 2px
-    for (let i = 0; i <= numPoints; i++) {
-      const pt = el.getPointAtLength((i / numPoints) * length);
-      poly.push([pt.x, pt.y]);
+    if (el.getTotalLength) {
+      const numPoints = Math.ceil(length / 2); // sample every 2px
+      for (let i = 0; i <= numPoints; i++) {
+        const pt = el.getPointAtLength((i / numPoints) * length);
+        poly.push([pt.x, pt.y]);
+      }
     }
-  }
 
-  return { outer: poly, holes: [] };
-}
+    return { outer: poly, holes: [] };
+  }
 
   return { outer: [], holes: [] };
 }
@@ -555,7 +558,7 @@ function buildPath2D(el) {
     const nums = pts.trim().split(/[ ,]+/).map(Number);
     const path = new Path2D();
     path.moveTo(nums[0], nums[1]);
-    for (let i = 2; i < nums.length; i += 2) path.lineTo(nums[i], nums[i+1]);
+    for (let i = 2; i < nums.length; i += 2) path.lineTo(nums[i], nums[i + 1]);
     path.closePath();
     return path;
   }
@@ -574,7 +577,7 @@ function buildPath2D(el) {
 }
 
 function drawShapeOutline(p, s, color = 255) {
-  
+
   p.noFill();
   p.stroke(color);
   //p.noStroke();
@@ -588,18 +591,18 @@ function drawShapeOutline(p, s, color = 255) {
 
     const path = new Path2D(d);
     const ctx = p.drawingContext;
-  ctx.save(); // preserve p5 state
+    ctx.save(); // preserve p5 state
 
-  ctx.strokeStyle = typeof color === "number"
-    ? `rgb(${color},${color},${color})`
-    : color;
+    ctx.strokeStyle = typeof color === "number"
+      ? `rgb(${color},${color},${color})`
+      : color;
 
-  ctx.lineWidth = 0.5;
-  ctx.fillStyle = "transparent";
+    ctx.lineWidth = 0.5;
+    ctx.fillStyle = "transparent";
 
-  ctx.stroke(path);
+    ctx.stroke(path);
 
-  ctx.restore();
+    ctx.restore();
   }
 }
 
@@ -734,9 +737,9 @@ function drawMap(p) {
   const AGG = getAggregationFactor(zoom);
   const CELL = BASE_CELL * AGG;
 
-  const left   = (-panX) / zoom;
-  const top    = (-panY) / zoom;
-  const right  = (p.width - panX) / zoom;
+  const left = (-panX) / zoom;
+  const top = (-panY) / zoom;
+  const right = (p.width - panX) / zoom;
   const bottom = (p.height - panY) / zoom;
 
   buttons.forEach(b => {
@@ -801,7 +804,7 @@ function drawMap(p) {
         if (node.type === "polygon") {
           p.beginShape();
           for (let i = 0; i < node.pts.length; i += 2) {
-            p.vertex(node.pts[i] * scaleFactor, node.pts[i+1] * scaleFactor);
+            p.vertex(node.pts[i] * scaleFactor, node.pts[i + 1] * scaleFactor);
           }
           p.endShape(p.CLOSE);
         } else if (node.type === "rect") {
@@ -841,8 +844,9 @@ function getButtonBounds(b) {
     maxY = Math.max(maxY, bb.y + bb.height);
   });
 
-  return { minX,minY,maxX,maxY,
-    center: {x: (minX + maxX) / 2,y: (minY + maxY) / 2 }
+  return {
+    minX, minY, maxX, maxY,
+    center: { x: (minX + maxX) / 2, y: (minY + maxY) / 2 }
   };
 }
 
@@ -895,7 +899,7 @@ function initData(p) {
   buttons.forEach(b => {
     const key = findCountryKey(b.buttonId);
 
-  const bounds = getButtonBounds(b);
+    const bounds = getButtonBounds(b);
     if (!key) {
       console.warn("No country match for", b.buttonId);
       b.population2024 = 0;
@@ -906,12 +910,12 @@ function initData(p) {
       b.migShare2024 = 0;
       return;
     }
-b.color = getColorForCountry(b.originalName);
-b.originalName = key;
-b.population2024 = countryData[key]?.["2024"]?.population ?? 0;
-b.dataMig2024 = dataMig[key]?.raw2024 ?? {};
-b.migShare2024 = countryData[key]?.["2024"]?.migShare ?? 0;
-b.migTotalRaw = b.population2024 * (b.migShare2024 / 100);
+    b.color = getColorForCountry(b.originalName);
+    b.originalName = key;
+    b.population2024 = countryData[key]?.["2024"]?.population ?? 0;
+    b.dataMig2024 = dataMig[key]?.raw2024 ?? {};
+    b.migShare2024 = countryData[key]?.["2024"]?.migShare ?? 0;
+    b.migTotalRaw = b.population2024 * (b.migShare2024 / 100);
     computeFillSquaresForButton(p, b);
 
     // convert migration → squares
@@ -919,9 +923,9 @@ b.migTotalRaw = b.population2024 * (b.migShare2024 / 100);
     b.dataMigSquares2024 = {};
     if (sumMig > 0 && b.squareCount > 0) {
       const ratio = b.squareCount / sumMig;
-const rawMigSquare = (b.migShare2024 * b.squareCount) / 100;
-const migSquare = rawMigSquare > 0 ? Math.max(1, Math.round(rawMigSquare)) : 0;
-b.sumMig = sumMig/1000;
+      const rawMigSquare = (b.migShare2024 * b.squareCount) / 100;
+      const migSquare = rawMigSquare > 0 ? Math.max(1, Math.round(rawMigSquare)) : 0;
+      b.sumMig = sumMig / 1000;
       for (let dest in b.dataMig2024) {
         b.dataMigSquares2024[dest] = b.dataMig2024[dest] * ratio;
       }
@@ -1009,7 +1013,7 @@ function pointInPolygon(px, py, pts) {
     const xi = pts[i][0], yi = pts[i][1];
     const xj = pts[j][0], yj = pts[j][1];
     const intersect = ((yi > py) !== (yj > py)) &&
-                      (px < (xj - xi) * (py - yi) / (yj - yi) + xi);
+      (px < (xj - xi) * (py - yi) / (yj - yi) + xi);
     if (intersect) inside = !inside;
   }
   return inside;

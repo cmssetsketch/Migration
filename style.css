@@ -2,6 +2,20 @@
   --top-margin: 25px;
   --bottom-bar: 50px;
   --bottom-margin: 10px;
+  --bg-color: #0d0d0d;
+  --text-main: #ffffff;
+  --font-stack: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --pop-bg: #111111;
+  --pop-border: #ffffff;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('SFPRODISPLAYBOLD.woff2') format('woff2'),
+    url('SFPRODISPLAYBOLD.OTF') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* Desktop: everything inline */
@@ -207,7 +221,7 @@ body {
   color: #fff;
   padding: 12px 14px;
   border-radius: 2px;
-  font-family: sans-serif;
+  font-family: var(--font-stack);
   font-size: 12px;
   line-height: 1.3;
   display: none;
@@ -405,7 +419,7 @@ body {
   color: #fff;
   padding: 20px 20px;
   border: 1px solid #fff;
-  font-family: sans-serif;
+  font-family: var(--font-stack);
   font-size: clamp(14px, 2.5vw, 16px);
   line-height: 1.3;
   word-wrap: break-word;

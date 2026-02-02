@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
   <title>Migration</title>
-  
+
   <link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/p5.collide2d@0.7.4/p5.collide2d.min.js"></script>
+  <script src="p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5.collide2d@0.7.4/p5.collide2d.min.js"></script>
 
 
 </head>
+
 <body>
   <div id="map-container">
     <div id="svg-wrapper"></div>
@@ -20,27 +22,27 @@
     <div id="popInfo"></div>
   </div>
 
-<div id="toolbar">
-  
+  <div id="toolbar">
+
     <div class="toolbar-left">
       <button id="info-btn">Info</button>
       <div class="lang-switch">
-<button onclick="setLang('fr')" class="fr-btn active" data-lang="fr">fr</button>
-<button onclick="setLang('en')" class="en-btn" data-lang="en">en</button>
+        <button onclick="setLang('fr')" class="fr-btn active" data-lang="fr">fr</button>
+        <button onclick="setLang('en')" class="en-btn" data-lang="en">en</button>
 
+
+      </div>
+
+      <div id="toolbar-center">
+        <button class="zoom-btn" data-zoom="in" id="zoom-in">+</button>
+        <button class="zoom-btn" data-zoom="out" id="zoom-out">−</button>
+      </div>
+      <div id="toggle-container">
+        <button id="toggle-everybody" class="toggle-btn active">Population mondiale</button>
+        <button id="toggle-migrant" class="toggle-btn">Migrants seulement</button>
+      </div>
 
     </div>
-
-<div id="toolbar-center">
-  <button class="zoom-btn" data-zoom="in" id="zoom-in">+</button>
-  <button class="zoom-btn" data-zoom="out" id="zoom-out">−</button>
-</div>
-    <div id="toggle-container">
-  <button id="toggle-everybody" class="toggle-btn active">Population mondiale</button>
-  <button id="toggle-migrant" class="toggle-btn">Migrants seulement</button>
-</div>
-
-         </div>
   </div>
 
   <!-- Scripts -->
