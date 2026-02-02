@@ -568,6 +568,7 @@ body {
   width: clamp(60px, 15vw, 80px);
   height: auto;
   margin-bottom: 15px;
+  margin-top: 15px;
   flex-shrink: 0;
 }
 
