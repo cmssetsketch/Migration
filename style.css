@@ -498,41 +498,47 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
+  /* dynamic height for mobile */
   background: #000;
   z-index: 10000;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: opacity 0.5s ease;
+  flex-direction: column;
+  /* Force vertical flow */
+  overflow-y: auto;
+  /* Scroll on container */
+  position: fixed;
+  inset: 0;
 }
 
 .intro-content {
+  margin: auto;
+  /* Vertically and horizontally centers, but allows scroll if clipped */
   max-width: 600px;
   width: 90%;
-  padding: 40px;
+  padding: 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Remove max-height constraints */
 }
 
 .intro-content h1 {
   font-family: var(--font-bold);
-  font-size: clamp(40px, 8vw, 70px);
-  margin-bottom: 30px;
+  font-size: clamp(32px, 8vw, 70px);
+  /* Slightly smaller min */
+  margin-bottom: 20px;
   letter-spacing: 4px;
   color: #fff;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .intro-content p {
   color: #ccc;
   margin-bottom: 20px;
-  font-size: clamp(14px, 4vw, 16px);
+  font-size: clamp(13px, 4vw, 16px);
   font-family: var(--font-stack);
-  line-height: 1.6;
-  /* Readable line height */
+  line-height: 1.5;
   max-width: 100%;
 }
 
@@ -540,16 +546,17 @@ body {
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.6);
-  padding: 18px 50px;
+  padding: 15px 40px;
   font-family: var(--font-bold);
-  font-size: 14px;
+  font-size: clamp(12px, 3vw, 14px);
   cursor: pointer;
   transition: all 0.4s ease;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-top: 20px;
+  margin-top: 10px;
   border-radius: 30px;
-  /* Rounded pill shape */
+  flex-shrink: 0;
+  /* Prevent button squashing */
 }
 
 #enter-btn:hover {
@@ -558,9 +565,10 @@ body {
 }
 
 .intro-logo {
-  width: 80px;
+  width: clamp(60px, 15vw, 80px);
   height: auto;
   margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .intro-socials {
@@ -568,6 +576,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 20px;
+  flex-shrink: 0;
 }
 
 .intro-socials img {
