@@ -105,7 +105,7 @@ topRow.appendChild(shape);
 
 const namePop = document.createElement("div");
   namePop.style.position = "relative";
-  const popValue = isEverybodyMode ? b.population2024 : b.migTotalRaw;
+  const popValue = isEverybodyMode ? b.population2024 : b.sumMig;
   const popLabel = isEverybodyMode ? "Population :" : "Migrants :";
 let millionsText = "";
 
@@ -113,7 +113,7 @@ let millionsText = "";
 if (!isEverybodyMode && b.originalName === "Kosovo") {
   millionsText = t("legend.noData") ?? "no data";
 } else {
-  const popValue = isEverybodyMode ? b.population2024 : b.migTotalRaw;
+  const popValue = isEverybodyMode ? b.population2024 : b.sumMig;
   const popLabel = isEverybodyMode ? "Population :" : "Migrants :";
 const realValue = popValue * 1000;
 
