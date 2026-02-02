@@ -190,7 +190,12 @@ document.addEventListener("DOMContentLoaded", () => {
       c.parent("p5-wrapper");
 
       // Retina support
-      p.pixelDensity(Math.min(2, window.devicePixelRatio || 1));
+      // Retina support - Force high quality if capable
+      const density = window.devicePixelRatio || 1;
+      p.pixelDensity(density > 2 ? 2 : density); // Limit to 2x for perf, but ensure it's not 1x on Retina.
+      // Actually user wanted "better antialiasing".
+      // p.pixelDensity(window.devicePixelRatio); // Uncapped quality.
+
 
       // Inject SVG FIRST
       await injectSvgFromUrl("./MigMappFinalN.svg");
@@ -758,17 +763,28 @@ function drawMap(p) {
     const squares = b.shapeSquares ?? [];
     if (!squares.length) return;
 
+    // CULLING: Skip off-screen elements
+    // Compute bounding box in screen coordinates
+    const { minX, minY, maxX, maxY } = getButtonBounds(b); // Ensuring getButtonBounds returns max too
+
+    // Transform to screen space? No, compare in world space against left/top/right/bottom
+    // left, top, right, bottom are already computed in world space above (line 751-754)
+    if (maxX < left || minX > right || maxY < top || minY > bottom) {
+      return; // SKIP DRAWING
+    }
+
     if (zoom >= 2) {
       const outlineColor = getColorForCountry(b.originalName);
       b.shapes.forEach(s => drawShapeOutline(p, s, outlineColor));
     }
 
-    const { minX, minY } = getButtonBounds(b);
-
     // BUILD AGGREGATED CELLS
     const cells = new Map();
 
     for (const sq of squares) {
+      // Small optimization: skip squares outside too?
+      if (sq.x < left - CELL || sq.x > right || sq.y < top - CELL || sq.y > bottom) continue;
+
       const cx = Math.floor((sq.x - minX) / CELL);
       const cy = Math.floor((sq.y - minY) / CELL);
       const key = cx + "," + cy;
@@ -840,6 +856,8 @@ function drawMap(p) {
 
 
 function getButtonBounds(b) {
+  if (b.cachedBounds) return b.cachedBounds;
+
   let minX = Infinity;
   let minY = Infinity;
   let maxX = -Infinity;
@@ -856,10 +874,11 @@ function getButtonBounds(b) {
     maxY = Math.max(maxY, bb.y + bb.height);
   });
 
-  return {
+  b.cachedBounds = {
     minX, minY, maxX, maxY,
     center: { x: (minX + maxX) / 2, y: (minY + maxY) / 2 }
   };
+  return b.cachedBounds;
 }
 
 function computeFillSquaresForButton(p, b) {
