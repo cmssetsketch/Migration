@@ -54,7 +54,7 @@
   }
 
   .migration-dest .migration-value {
-    font-size: 5px;
+    font-size: 10px;
   }
 }
 
@@ -566,7 +566,7 @@ body {
 }
 
 .intro-logo {
-  width: clamp(60px, 15vw, 80px);
+  width: clamp(50px, 15vw, 70px);
   height: auto;
   margin-top: 25px;
   flex-shrink: 0;
@@ -589,4 +589,10 @@ body {
 
 .intro-socials img:hover {
   opacity: 1;
+}
+.intro-title {  
+  height: clamp(30px, 15vw, 60px);
+  width: auto;
+  margin-top: 20px;
+  flex-shrink: 0;
 }
