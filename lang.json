@@ -328,7 +328,7 @@
       "noData" : "Pas de données"
     },
     "popInfo": {
-      "warning": "Migration est une œuvre interactive crée à partir des chiffres des Nations Unies sur la migration dans le monde en 2024. Comme toute carte, elle ne montre pas le monde tel qu’il est, mais tel qu'il est compté et organisé. <br><br> Dans ce monde bien rangé, un migrant est une perturbation dans le motif du territoire ou il vit. Plus son origine est lointaine, plus il contraste avec ses voisins. <br><br> Chaque territoire decide comment il reconnait les siens. Pour certains, le motif est un héritage qui se transmet. Pour d’autres, c’est la frontiere qui délimite le motif, tout ceux qui naissent à l’intérieur en font partie. Selon ces critères, on est dedans ou dehors, semblable ou différent.",
+      "warning": "Migration est une œuvre interactive crée à partir des chiffres des Nations Unies sur la migration dans le monde en 2024. Comme toute carte, elle ne montre pas le monde tel qu’il est, mais tel qu'il est compté et organisé. <br><br> Dans ce monde bien rangé, un migrant est une perturbation dans le motif du territoire ou il vit. Plus son origine est lointaine, plus il contraste avec ses voisins. <br><br> À l’exception des territoires ou cette information n’est pas disponible, ce jeu de donnée définit comme migrant toute personne née à l'étranger.",
 
 "disclaimer": "source : <em>International migrant stock 2024</em> et<em> World Population Prospects 2024."
     
