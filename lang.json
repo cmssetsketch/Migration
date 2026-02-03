@@ -13,7 +13,7 @@
     },
     "popInfo": {
       "statland": "Welcome",
-"warning": "Migration is an interactive project based on the United Nations's 2024 data on global migration. Like any map, it does not show the world as it is, but how it is counted and organized.<br><br>In this neatly ordered system, a migrant appears as a disturbance in the local pattern. The more distant their origin is considered to be, the more they contrast with their neighbors.<br><br>With the exception of territories for which this information is not available, this dataset defines a migrant as any person born abroad, regardless of their citizenship. According to this rule, one is counted as inside or outside, similar or different.",
+"warning": "Migration is an interactive project based on the United Nations's 2024 data on global migration. Like any map, it does not show the world as it is, but how it is counted and organized.<br><br>In this neatly ordered system, a migrant appears as a disturbance in the local pattern. The more distant their origin is considered to be, the more they contrast with their neighbors.<br><br>With the exception of territories for which this information is not available, this dataset defines a migrant as any person born abroad, regardless of their citizenship.",
 
 "disclaimer": "data : <em>International migrant stock 2024</em> and <em>World Population Prospects 2024</em> datasets."
 
