@@ -446,7 +446,7 @@ body {
 }
 
 #disclaimer {
-  font-size: clamp(12px, 1.6vw, 14px);
+font-size: clamp(11px, 1.6vw, 13px);
   color: #D5D5D5;
   line-height: 1.3;
   display: inline-block;
@@ -457,7 +457,7 @@ body {
 #warning {
   font-size: clamp(11px, 1.6vw, 13px);
   font-weight: 300;
-  color: #B9B9B9;
+  color: #ffffff;
   line-height: 1.3;
   display: inline-block;
   margin-bottom: 25px;
@@ -516,7 +516,7 @@ body {
   /* Vertically and horizontally centers, but allows scroll if clipped */
   max-width: 600px;
   width: 90%;
-  padding: 40px 20px;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
