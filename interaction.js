@@ -228,14 +228,7 @@ header.appendChild(topRow);
   header.appendChild(popDiv);
   if (isEverybodyMode&& b.originalName !== "Kosovo" &&  b.originalName !== "Melanesia"){
   migInfo.appendChild(citizenDiv);
-      // ⬇️ new line here
-  const modeLine = document.createElement("div");
-  modeLine.className = "mig-mode-line";
-  modeLine.textContent = isEverybodyMode
-    ? t("legend.mainly")
-    : t("legend.from");
 
-  migInfo.appendChild(modeLine);
     header.appendChild(migInfo);
   }
 
