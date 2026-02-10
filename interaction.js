@@ -226,23 +226,27 @@ function createCitizenNotes(countryName, namePop) {
 // Build and inject header
 header.appendChild(topRow);
   header.appendChild(popDiv);
-  if (isEverybodyMode&& b.originalName !== "Kosovo" &&  b.originalName !== "Melanesia"){
-  migInfo.appendChild(citizenDiv);
-
-    header.appendChild(migInfo);
-  }
-
+  
 const modeLine = document.createElement("div");
 modeLine.className = "mig-mode-line";
 modeLine.textContent = isEverybodyMode
   ? t("legend.mainly")
   : t("legend.from");
 
-// Add a little space below the line
-modeLine.style.marginBottom = "5px";
+// Espace entre modeLine et liste
+modeLine.style.marginTop = "4px";
+modeLine.style.marginBottom = "4px";
+  
+  if (isEverybodyMode&& b.originalName !== "Kosovo" &&  b.originalName !== "Melanesia"){
+  migInfo.appendChild(citizenDiv);
 
-// Append it to the container that holds the list (migList)
-list.prepend(modeLine);
+    header.appendChild(migInfo);
+    header.appendChild(modeLine);
+  }
+
+
+// Append dans le header, avant la zone scrollable
+header.appendChild(modeLine);
   popUp.prepend(header);
 popUp.appendChild(list);
 
