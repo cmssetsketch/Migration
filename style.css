@@ -338,6 +338,11 @@ body {
   margin-bottom: 10px;
 }
 
+.mig-mode-line {
+  font-size: 14px;
+margin-bottom: 5px;
+}
+
 .migration-list {
   max-height: 300px;
   overflow-y: auto;
