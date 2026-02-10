@@ -236,7 +236,7 @@ modeLine.textContent = isEverybodyMode
 // Ajout des marges
 modeLine.style.marginTop = "4px";
 modeLine.style.marginBottom = "4px";
-modeLine.style.marginLeft = isEverybodyMode ? "34px" : "5px";
+modeLine.style.marginLeft = isEverybodyMode ? "5px"  : "34px";
 
 // --- MIG INFO + placement selon le mode ---
 if (isEverybodyMode && b.originalName !== "Kosovo" && b.originalName !== "Melanesia") {
