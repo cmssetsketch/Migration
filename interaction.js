@@ -183,6 +183,15 @@ if (b.originalName === "Kosovo") {
 
 migInfo.appendChild(line);
 
+  const subLine = document.createElement("span");
+subLine.className = "mig-subline";
+
+subLine.textContent = isEverybodyMode
+  ? t("legend.mainly")
+  : t("legend.from");
+
+migInfo.appendChild(subLine);
+  
 function getCitizenByCountry(countryName) {
 const letters = citizenData.types[countryName];
   if (!letters || !letters.length) return null;
