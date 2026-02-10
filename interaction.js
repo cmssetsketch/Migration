@@ -233,19 +233,18 @@ modeLine.textContent = isEverybodyMode
   ? t("legend.mainly")
   : t("legend.from");
 
-// Espace entre modeLine et liste
+// Ajout des marges
 modeLine.style.marginTop = "4px";
 modeLine.style.marginBottom = "4px";
-  
-  if (isEverybodyMode&& b.originalName !== "Kosovo" &&  b.originalName !== "Melanesia"){
+modeLine.style.marginLeft = isEverybodyMode ? "34px" : "5px";
+
+// --- MIG INFO + placement selon le mode ---
+if (isEverybodyMode && b.originalName !== "Kosovo" && b.originalName !== "Melanesia") {
   migInfo.appendChild(citizenDiv);
+  header.appendChild(migInfo);
+}
 
-    header.appendChild(migInfo);
-    header.appendChild(modeLine);
-  }
-
-
-// Append dans le header, avant la zone scrollable
+// --- Append modeLine une seule fois dans le header ---
 header.appendChild(modeLine);
   popUp.prepend(header);
 popUp.appendChild(list);
