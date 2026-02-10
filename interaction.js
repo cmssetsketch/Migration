@@ -232,17 +232,7 @@ header.appendChild(topRow);
     header.appendChild(migInfo);
   }
 
-  const modeLine = document.createElement("div");
-modeLine.className = "mig-mode-line";
-modeLine.textContent = isEverybodyMode
-  ? t("legend.mainly")
-  : t("legend.from");
 
-// Add a little space below the line
-modeLine.style.marginBottom = "5px";
-
-// Append it to the container that holds the list (migList)
-migList.prepend(modeLine);
   popUp.prepend(header);
 popUp.appendChild(list);
 
