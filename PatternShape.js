@@ -23,7 +23,7 @@ const shapeGroups = {
  "13": [ "French Polynesia" , "Australia" ,"Cambodia" , "Macao" , "Bhutan" ,"Syria" ,"French Guiana" ,   "Guadeloupe", "Belize", "Bermuda" , "Madagascar" ,  "Burkina Faso" , "Angola", "Ethiopia" ,"Tunisia"  , "Hungary" ,"France", "United Kingdom","Portugal"], 
   "14": ["Palau" ,  "Tonga" ,"Philippines" ,"Taiwan", "Uzbekistan"  , "Oman" ,"Cayman Islands", "Sierra Leone" , "Burundi", "Kosovo"],
      "15": ["Kuwait"  , "Paraguay" ,"Barbados" , "Ghana" ,"Mozambique","Iran"],
-  "16": ["Anguilla",  "Luxembourg"  ],
+  "16": ["Anguilla" ],
   "17": ["Tokelau" , "Micronesia States" ,  "Solomon Islands" ,"Malaysia" ,"North Korea" ,  "Israel"  ,"Colombia" , "Bahamas" , "Panama","Senegal" , "Equatorial Guinea"   ,"Rwanda","Egypt",  "Bosnia and Herzegovina" ,  "Moldova" , "Monaco" ,"Estonia" ],
   "18": ["Afghanistan" ,"Turkmenistan"  ,"Chile" ,"Saint Vincent and the Grenadines", "Benin", "Zambia" , "Bulgaria","North Macedonia" ],
   "19": ["Sint Maarten"], 
@@ -32,7 +32,7 @@ const shapeGroups = {
   "22": ["Brunei Darussalam" ,"Azerbaijan" ,"British Virgin Islands","Comoros" ,"Liechtenstein","Malta" ],  
   "23": ["Tuvalu" ,  "Micronesia" , "Vanuatu" , "Thailand" , "South Korea", "Venezuela" ,"Palestine" , "Turks and Caicos Islands","Costa Rica","Gambia" , "Congo"  , "Uganda"  , "Austria","Lithuania","Albania" ],
   "24": ["Aruba","Bonaire, Sint Eustatius and Saba"],
-  "25": ["Curaçao"] 
+  "25": ["Curaçao",  "Luxembourg" ] 
 };
 
 
