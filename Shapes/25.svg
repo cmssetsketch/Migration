@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2">
-  <polygon points="2 1 1.1 1.9 .9 1.7 1.6 1 .9 .3 1.1 .1 2 1" style="fill: #fff;"/>
-  <polygon points="1.1 1 .2 1.9 0 1.7 .7 1 0 .3 .2 .1 1.1 1" style="fill: #fff;"/>
+  <path d="M.77,1L.26.49s-.05-.13,0-.18.13-.05.18,0l.56.56h.61c.07,0,.12.06.12.13,0,.07-.06.12-.13.12h-.61s-.56.56-.56.56c-.02.02-.06.04-.09.04s-.06-.01-.09-.04c-.05-.05-.05-.13,0-.18l.51-.51Z" style="fill: #fff;"/>
 </svg>
