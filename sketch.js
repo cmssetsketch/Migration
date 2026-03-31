@@ -10,7 +10,7 @@ let countryMig;
 let dataMig = {};
 let selectedButton = null;
 let font;
-let zoom = 1.2;
+let zoom = 1;
 let MIN_ZOOM = 1;
 let offscreen;
 const userLang = navigator.language || navigator.userLanguage || "fr";
@@ -164,8 +164,8 @@ document.getElementById("enter-btn").textContent = t("legend.enter-btn");
         const scaleFactor = mapContainer.clientHeight / svgHeight;
 
         // Initial auto-zoom to fit
-        if (zoom === 1.2) {
-          zoom = scaleFactor * 1.4; // 140% zoom
+        if (zoom === 1) {
+          zoom = scaleFactor * 1.6; // 140% zoom
         }
 
         panX = (mapContainer.clientWidth - svgWidth * zoom) / 2;
