@@ -10,7 +10,7 @@ let countryMig;
 let dataMig = {};
 let selectedButton = null;
 let font;
-let zoom = 1;
+let zoom = 1.5;
 let MIN_ZOOM = 1;
 let offscreen;
 const userLang = navigator.language || navigator.userLanguage || "fr";
