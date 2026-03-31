@@ -164,7 +164,7 @@ document.getElementById("enter-btn").textContent = t("legend.enter-btn");
         const scaleFactor = mapContainer.clientHeight / svgHeight;
 
         // Initial auto-zoom to fit
-        if (zoom === 1) {
+        if (zoom === 1.5) {
           zoom = scaleFactor * 1.4; // 140% zoom
         }
 
