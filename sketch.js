@@ -168,7 +168,7 @@ document.getElementById("enter-btn").textContent = t("legend.enter-btn");
           zoom = scaleFactor * 1.6; // 140% zoom
         }
 
-        panX = (mapContainer.clientWidth - svgWidth * zoom) / 2;
+        panX = ((mapContainer.clientWidth - svgWidth * zoom) / 2)-30;
         panY = (mapContainer.clientHeight - svgHeight * zoom) / 2;
 
         if (p && p.redraw) p.redraw();
